@@ -33,11 +33,14 @@
       <version>4.5</version>
       <scope>test</scope>
     </dependency>
+    <!-- This was playing up horribly in eclipse so in the end I downloaded and included
+    	the ojdbc14 jar as an external jar to get the project to compile and run.
     <dependency>
     	<groupId>com.oracle</groupId>
     	<artifactId>ojdbc14</artifactId>
     	<version>10.0.2.0.0 </version>
-    	<scope>provided</scope>
+    	<scope>compile</scope>
     </dependency>
+    -->
   </dependencies>
 </project>
