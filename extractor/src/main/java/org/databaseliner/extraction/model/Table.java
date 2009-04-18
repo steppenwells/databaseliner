@@ -28,7 +28,7 @@ public class Table {
 	private final List<Relationship> foreignKeyRelationships;
 	private final List<Relationship> relationshipsSeededFromThisTable;
 	
-	// this is the full list of foriegn keys used for output. we can't rely on the relationships list
+	// this is the full list of foreign keys used for output. we can't rely on the relationships list
 	// as some relationships might be ignored and configured by the user.
 	private final Map<Column, TableName> outputDependencies;
 	private boolean hasBeenOutput = false;
@@ -131,7 +131,7 @@ public class Table {
 	public void addForeignKeyDependency(Table dependedOnTable, String dependedOnTableColumn, String localColumnName) {
 	
 		BaseRelationship foreignKeyRelationship = new RefersToRelationship(
-				dependedOnTable.getName().getTableName(), dependedOnTableColumn, 
+				dependedOnTable.getName().getSchemaName(), dependedOnTable.getName().getTableName(), dependedOnTableColumn, 
 				tableName.getTableName(), localColumnName);
 		
 		foreignKeyRelationship.addSeedTable(this);

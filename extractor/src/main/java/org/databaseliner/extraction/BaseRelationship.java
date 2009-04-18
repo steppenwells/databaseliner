@@ -7,6 +7,7 @@ import org.databaseliner.database.DatabaseConnector;
 import org.databaseliner.extraction.model.Column;
 import org.databaseliner.extraction.model.Row;
 import org.databaseliner.extraction.model.Table;
+import org.databaseliner.extraction.model.TableName;
 import org.databaseliner.output.SqlStringOutputter;
 
 
@@ -14,9 +15,9 @@ public abstract class BaseRelationship implements Relationship {
 
 	private static final int WHERE_CLAUSE_SIZE = 500;
 	protected Table tableToFill;
-	protected final String tableName;
+	protected final TableName tableName;
 	
-	public BaseRelationship(String tableName) {
+	public BaseRelationship(TableName tableName) {
 		this.tableName = tableName;
 	}
 
@@ -33,7 +34,7 @@ public abstract class BaseRelationship implements Relationship {
 
 	protected abstract List<String> getExtractionSqlStrings(List<Row> dirtyRows, Table dirtyTable, SqlStringOutputter sqlStringOutputter);
 
-	public String getTableName() {
+	public TableName getTableName() {
 		return tableName;
 	}
 

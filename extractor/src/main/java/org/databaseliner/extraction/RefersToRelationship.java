@@ -7,6 +7,7 @@ import java.util.List;
 import org.databaseliner.extraction.model.Column;
 import org.databaseliner.extraction.model.Row;
 import org.databaseliner.extraction.model.Table;
+import org.databaseliner.extraction.model.TableName;
 import org.databaseliner.output.SqlStringOutputter;
 
 public class RefersToRelationship extends BaseRelationship {
@@ -17,8 +18,8 @@ public class RefersToRelationship extends BaseRelationship {
 	
 	protected Table seedTable;
 	
-	public RefersToRelationship(String tableName, String column, String seedTableName, String seedColumn) {
-		super(tableName);
+	public RefersToRelationship(String schemaName, String tableName, String column, String seedTableName, String seedColumn) {
+		super(new TableName(tableName, schemaName));
 		this.column = column;
 		this.seedTableName = seedTableName;
 		this.seedColumnName = seedColumn;

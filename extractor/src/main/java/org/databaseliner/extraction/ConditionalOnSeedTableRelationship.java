@@ -3,7 +3,6 @@ package org.databaseliner.extraction;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.databaseliner.extraction.model.Column;
 import org.databaseliner.extraction.model.Row;
 import org.databaseliner.extraction.model.Table;
 import org.databaseliner.output.SqlStringOutputter;
@@ -14,7 +13,7 @@ public class ConditionalOnSeedTableRelationship extends RefersToRelationship {
 	private Condition condition;
 
 	public ConditionalOnSeedTableRelationship(String schemaName, String tableName, String columnName, String seedTable, String seedColumn) {
-		super(tableName, columnName, seedTable, seedColumn);
+		super(schemaName, tableName, columnName, seedTable, seedColumn);
 	}
 	
 	@Override

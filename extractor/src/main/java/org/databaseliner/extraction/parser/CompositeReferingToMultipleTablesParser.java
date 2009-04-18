@@ -14,12 +14,16 @@ import org.dom4j.Node;
  * 
  * <p>
  * <code>
- * 	&lt;relationship table="table" type="compositeReferingToMultipleTables"&gt;<br/>
+ * 	&lt;relationship schema="schema_name" table="table" type="compositeReferingToMultipleTables"&gt;<br/>
  *    &lt;relate column="column" seedTable="seed_table_name" seed_column="seedColumn"/&gt;<br/>
  *    &lt;relate column="column" seedTable="seed_table_name" seed_column="seedColumn"/&gt;<br/>
  *  &lt;/relationship&gt;
  * </code>
  * </p>
+ * 
+ * <p>The <code>schema</code> attribute specifies the schema the table to extract data from is found in.
+ * This is an optional attribute and will default to the same schema the seed table is in, if this is 
+ * specified it allows cross schema relationships to be defined.</p>
  * 
  * <p>The <code>table</code> attribute specifies which table to extract data from. This
  * is a required attribute.</p>
@@ -72,10 +76,12 @@ public class CompositeReferingToMultipleTablesParser implements RelationshipPars
 	@SuppressWarnings("unchecked")
 	@Override
 	public Relationship parse(Node relationshipNode) {
+		Node schemaNode = relationshipNode.selectSingleNode("@schema");
+		String schemaName = schemaNode != null ? schemaNode.getText().trim() : null;
 		String tableName = relationshipNode.selectSingleNode("@table").getText().trim();
 		
 		LOG.info("creating composite to extract " + tableName);
-		CompositeReferingToMultipleTablesRelationship relationship = new CompositeReferingToMultipleTablesRelationship(tableName);
+		CompositeReferingToMultipleTablesRelationship relationship = new CompositeReferingToMultipleTablesRelationship(schemaName, tableName);
 
 		List<Node> relateNodes = relationshipNode.selectNodes("relate");
 		for (Node relateNode : relateNodes) {
@@ -89,7 +95,6 @@ public class CompositeReferingToMultipleTablesParser implements RelationshipPars
 			
 			relationship.addTableRelationship(column, seedTableName, seedColumn);
 		}
-		
 
 		return relationship;
 	}

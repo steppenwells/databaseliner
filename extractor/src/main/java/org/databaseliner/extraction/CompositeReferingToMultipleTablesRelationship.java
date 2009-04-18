@@ -6,15 +6,16 @@ import java.util.List;
 import org.databaseliner.extraction.model.Column;
 import org.databaseliner.extraction.model.Row;
 import org.databaseliner.extraction.model.Table;
+import org.databaseliner.extraction.model.TableName;
 import org.databaseliner.output.SqlStringOutputter;
 
 public class CompositeReferingToMultipleTablesRelationship extends BaseRelationship {
 
 	private final List<TableRelationship> tableRelationships;
 	
-	public CompositeReferingToMultipleTablesRelationship(String tableName) {
+	public CompositeReferingToMultipleTablesRelationship(String schemaName, String tableName) {
 		
-		super(tableName);
+		super(new TableName(schemaName, tableName));
 		tableRelationships = new ArrayList<TableRelationship>();
 	}
 

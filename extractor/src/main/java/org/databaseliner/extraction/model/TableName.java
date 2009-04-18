@@ -3,7 +3,7 @@ package org.databaseliner.extraction.model;
 
 public class TableName {
 	private final String tableName;
-	private final String schemaName;
+	private String schemaName;
 
 	public TableName(String tableName, String schemaName) {
 		this.tableName = tableName;
@@ -16,6 +16,10 @@ public class TableName {
 
 	public String getSchemaName() {
 		return schemaName;
+	}
+
+	public void setSchemaName(String schemaName) {
+		this.schemaName = schemaName;
 	}
 
 	@Override
@@ -56,7 +60,4 @@ public class TableName {
 			return false;
 		return true;
 	}
-	
-	
-
 }

@@ -152,7 +152,11 @@ public class ExtractionModel {
 		}
 		
 		for (Relationship relationship : userRelationshipsForTable) {
-			Table tableToFill = addTable(new TableName(relationship.getTableName(), table.getName().getSchemaName()));
+			TableName tableNameToFill = relationship.getTableName();
+			if (tableNameToFill.getSchemaName() == null) {
+				tableNameToFill.setSchemaName(table.getName().getSchemaName());
+			}
+			Table tableToFill = addTable(tableNameToFill);
 			relationship.setTableToFill(tableToFill);
 
 			table.addSeededRelationship(relationship);

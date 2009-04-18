@@ -12,9 +12,13 @@ import org.dom4j.Node;
  * 
  * <p>
  * <code>
- * 	&lt;relationship table="table_name" column="column" type="refersTo" seed_table="seed_table_name" seed_column="seed_column"/&gt;
+ * 	&lt;relationship schema="schema_name" table="table_name" column="column" type="refersTo" seed_table="seed_table_name" seed_column="seed_column"/&gt;
  * </code>
  * </p>
+ * 
+ * <p>The <code>schema</code> attribute specifies the schema the table to extract data from is found in.
+ * This is an optional attribute and will default to the same schema the seed table is in, if this is 
+ * specified it allows cross schema relationships to be defined.</p>
  * 
  * <p>The <code>table</code> attribute specifies which table to extract data from. This
  * is a required attribute.</p>
@@ -34,6 +38,9 @@ public class RefersToRelationshipParser implements RelationshipParser{
 	
 	@Override
 	public Relationship parse(Node relationshipNode) {
+		
+		Node schemaNode = relationshipNode.selectSingleNode("@schema");
+		String schemaName = schemaNode != null ? schemaNode.getText().trim() : null;
 		String tableName = relationshipNode.selectSingleNode("@table").getText().trim();
 		String column = relationshipNode.selectSingleNode("@column").getText().trim();
 
@@ -41,7 +48,7 @@ public class RefersToRelationshipParser implements RelationshipParser{
 		String seedColumn = relationshipNode.selectSingleNode("@seedColumn").getText().trim();
 
 		LOG.info("creating refering relationship " + seedTableName + " -> " + tableName);
-		return new RefersToRelationship(tableName, column, seedTableName, seedColumn);
+		return new RefersToRelationship(schemaName, tableName, column, seedTableName, seedColumn);
 	}
 
 }
