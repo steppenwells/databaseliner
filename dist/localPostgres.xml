@@ -1,0 +1,34 @@
+<databaseliner>
+	<databaseConnection>
+		<driver>org.postgresql.Driver</driver>
+		<connectionUrl>jdbc:postgresql://localhost:5432/dblinertest</connectionUrl>
+		<user>dblinertest</user>
+		<password>password</password>
+		<dialect>org.databaseliner.dialect.postgres.PostgresDialect</dialect>
+	</databaseConnection>
+	
+	<outputDetails>
+		<outputDirectory>output</outputDirectory>
+		<script>postgres_output.sql</script>
+		<preserveDatabaseIntegrity>false</preserveDatabaseIntegrity>
+	</outputDetails>
+	
+	<extractionPlan>
+		
+		<extraction table="static_table" type="all" />
+		
+		<extraction table="source" type="query" >
+			<whereClause>include_in_extract = true</whereClause>
+		</extraction>
+		
+		<relationship table="source_to_b" column="source_id" 
+			type="refersTo" 
+			seedTable="source" seedColumn="id" />
+				
+				
+		<!--<extraction table="Project" type="matchingExtractedData">-->
+			<!--<dependency localColumn="AccountID" extractedTable="Account" extractedColumn="AccountID" />-->
+		<!--</extraction>-->
+
+    </extractionPlan>
+</databaseliner>

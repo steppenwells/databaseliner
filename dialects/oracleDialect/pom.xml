@@ -37,7 +37,7 @@
     	<groupId>com.oracle</groupId>
     	<artifactId>ojdbc14</artifactId>
     	<version>10.0.2.0.0 </version>
-    	<scope>compile</scope>
+    	<scope>provided</scope>
     </dependency>
   </dependencies>
 </project>
