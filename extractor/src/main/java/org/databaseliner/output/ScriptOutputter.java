@@ -29,8 +29,12 @@ public class ScriptOutputter {
 		this.preserveDatabaseIntegrity = preserveDatabaseIntegrity;
 	}
 
-	public String getOutputFilename() {
+	public String getScriptOutputFilename() {
 		return scriptOutputFilename;
+	}
+	
+	public String getReportOutputFilename() {
+		return reportOutputFilename;
 	}
 
 	public String getOutputDirectory() {

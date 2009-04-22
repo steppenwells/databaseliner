@@ -12,18 +12,25 @@ public class ScriptOutputterConfigParserTest extends XMLParsingTest {
 	
 	private static final String FULL_CONFIG_XML = "<databaseliner><outputDetails>\n" +
 			"<outputDirectory>directoryName</outputDirectory>\n" +
+			"<report>reportFileName</report>\n" +
 			"<script>outputFileName</script>\n" +
 			"<preserveDatabaseIntegrity>false</preserveDatabaseIntegrity>\n" +
 			"</outputDetails></databaseliner>";
 	
 	private static final String CONFIG_WITHOUT_OPTIONAL_FIELDS = "<databaseliner><outputDetails>\n" +
 		"<outputDirectory>directoryName</outputDirectory>\n" +
+		"<report>reportFileName</report>\n" +
 		"<script>outputFileName</script>\n" +
 		"</outputDetails></databaseliner>";
 	
 	@Test public void shouldParseFileName() throws Exception {
 		ScriptOutputter scriptOutputter = ScriptOutputterConfigParser.parse(getDocument(FULL_CONFIG_XML));
-		Assert.assertEquals("outputFileName", scriptOutputter.getOutputFilename());
+		Assert.assertEquals("outputFileName", scriptOutputter.getScriptOutputFilename());
+	}
+	
+	@Test public void shouldParseReportFileName() throws Exception {
+		ScriptOutputter scriptOutputter = ScriptOutputterConfigParser.parse(getDocument(FULL_CONFIG_XML));
+		Assert.assertEquals("reportFileName", scriptOutputter.getReportOutputFilename());
 	}
 	
 	@Test public void shouldParseOutputDirectory() throws Exception {
