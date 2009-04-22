@@ -21,7 +21,7 @@ public class HtmlReportOutputter {
 					"<title>dataBaseliner report</title>" +
 				"</head>" +
 			"<body>" +
-			"<h1>Report for dataBaseliner run at %1</h1>\n";
+			"<h1>Report for dataBaseliner run at %s</h1>\n";
 	
 	private static final String FOOTER = "</body></html>";
 
@@ -78,11 +78,11 @@ public class HtmlReportOutputter {
 		StringBuilder relationshipList = new StringBuilder();
 		
 		for (Relationship relationship : table.getForeignKeyRelationships()) {
-			relationshipList.append("<li>").append(relationship).append("</li>\n");
+			relationshipList.append("<li>").append(relationship.toHtmlString()).append("</li>\n");
 		}
 		
 		for (Relationship relationship : table.getRelationshipsSeededFromThisTable()) {
-			relationshipList.append("<li>").append(relationship).append("</li>\n");
+			relationshipList.append("<li>").append(relationship.toHtmlString()).append("</li>\n");
 		}
 		
 		return relationshipList.toString();
