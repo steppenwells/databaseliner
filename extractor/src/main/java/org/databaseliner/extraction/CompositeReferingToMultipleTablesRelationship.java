@@ -98,6 +98,21 @@ public class CompositeReferingToMultipleTablesRelationship extends BaseRelations
 		return sqlStatementTemplate.toString();
 	}
 	
+	@Override
+	public String toHtmlString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("data in the following tables: ");
+		for (TableRelationship tableRelationship : tableRelationships) {
+			TableName seedTableName = tableRelationship.seedTable.getName();
+			builder.append(String.format("<a href=\"%s\">%s.%s</a> ", 
+					seedTableName.getHtmlIdSafeName(), 
+					seedTableName.toString(), 
+					tableRelationship.getSeedColumn().getName()));
+		}
+		builder.append(String.format("polulates data in <a href=\"%s\">%s.%s</a>", tableName.getHtmlIdSafeName(), tableName));
+		return builder.toString();
+	}
+	
 
 	private class TableRelationship {
 
@@ -129,4 +144,5 @@ public class CompositeReferingToMultipleTablesRelationship extends BaseRelations
 			return seedTableName + "." + seedColumn;
 		}
 	}
+
 }

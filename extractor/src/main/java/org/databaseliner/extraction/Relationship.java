@@ -17,5 +17,7 @@ public interface Relationship {
 	void setTableToFill(Table tableToFill);
 
 	void satisfyForRows(List<Row> dirtyRows, Table dirtyTable, DatabaseConnector databaseConnector);
+	
+	String toHtmlString();
 
 }

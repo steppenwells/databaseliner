@@ -63,6 +63,18 @@ public class Table {
 		return outputDependencies;
 	}
 	
+	public List<Column> getColumns() {
+		return columns;
+	}
+
+	public List<Relationship> getForeignKeyRelationships() {
+		return foreignKeyRelationships;
+	}
+
+	public List<Relationship> getRelationshipsSeededFromThisTable() {
+		return relationshipsSeededFromThisTable;
+	}
+
 	public List<Column> getNulledColumns() {
 		return nulledColumns;
 	}

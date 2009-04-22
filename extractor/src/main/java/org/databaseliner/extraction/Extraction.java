@@ -8,6 +8,7 @@ import org.databaseliner.extraction.model.ExtractionModel;
 import org.dom4j.Document;
 import org.dom4j.Node;
 
+// this is a manipulatable version of the extraction plan to be used by the GUI.
 public class Extraction {
 	
 	private ExtractionModel extractionModel;
@@ -19,7 +20,7 @@ public class Extraction {
 		List<String> ignoredTableNames = parseIgnoredTables(configDocument);
 		List<Relationship> relationships = parseRelationships(configDocument);
 		
-		extractionModel = new ExtractionModel(databaseConnector, seeds, ignoredTableNames, relationships);
+		extractionModel = new ExtractionModel(databaseConnector, seeds, ignoredTableNames, relationships, false);
 		extractionModel.build();
 	}
 

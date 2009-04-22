@@ -30,6 +30,11 @@ public class TableName {
 		return tableName;
 	}
 	
+	public String getHtmlIdSafeName() {
+		String rawTableName = this.toString();
+		return rawTableName.replace('.', '-').toLowerCase();
+	}
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;

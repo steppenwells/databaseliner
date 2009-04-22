@@ -15,20 +15,22 @@ import org.databaseliner.extraction.model.TableName;
 
 public class ScriptOutputter {
 
-	private final String outputFilename;
+	private final String reportOutputFilename;
+	private final String scriptOutputFilename;
 	private final String outputDirectory;
 	private final boolean preserveDatabaseIntegrity;
 	
 	private final static Logger LOG = Logger.getLogger(ScriptOutputter.class);
 
-	public ScriptOutputter(String outputDirectory, String outputFilename, boolean preserveDatabaseIntegrity) {
-		this.outputFilename = outputFilename;
+	public ScriptOutputter(String outputDirectory, String reportOutputFilename, String scriptOutputFilename, boolean preserveDatabaseIntegrity) {
+		this.reportOutputFilename = reportOutputFilename;
+		this.scriptOutputFilename = scriptOutputFilename;
 		this.outputDirectory = outputDirectory;
 		this.preserveDatabaseIntegrity = preserveDatabaseIntegrity;
 	}
 
 	public String getOutputFilename() {
-		return outputFilename;
+		return scriptOutputFilename;
 	}
 
 	public String getOutputDirectory() {
@@ -40,10 +42,38 @@ public class ScriptOutputter {
 	}
 
 	public void output(ExtractionModel extractionModel) {
-		
+		outputReport(extractionModel);
+		outputDataScript(extractionModel);
+	}
+
+	private void outputReport(ExtractionModel extractionModel) {
+		FileWriter reportWriter = null;
+		try {
+			File reportFile = new File(outputDirectory, reportOutputFilename);
+			reportFile.getParentFile().mkdirs();
+			reportFile.createNewFile();
+			reportWriter = new FileWriter(reportFile);
+			HtmlReportOutputter htmlReportOutputter = new HtmlReportOutputter();
+			
+			htmlReportOutputter.writeReport(extractionModel, reportWriter);
+			
+		} catch (Exception e) {
+			throw new RuntimeException("failed to output report file", e);
+		} finally {
+			if (reportWriter != null) {
+				try {
+					reportWriter.close();
+				} catch (IOException e) {
+					// do nothing
+				}
+			}
+		}
+	}
+	
+	private void outputDataScript(ExtractionModel extractionModel) {
 		FileWriter scriptWriter = null;
 		try {
-			File outputFile = new File(outputDirectory, outputFilename);
+			File outputFile = new File(outputDirectory, scriptOutputFilename);
 			outputFile.getParentFile().mkdirs();
 			outputFile.createNewFile();
 			scriptWriter = new FileWriter(outputFile);

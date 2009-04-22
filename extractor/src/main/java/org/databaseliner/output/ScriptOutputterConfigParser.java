@@ -15,7 +15,8 @@ import org.dom4j.Node;
  *	<br/>
  *	&lt;outputDetails&gt;<br/>
  *		&lt;outputDirectory&gt;directoryName&lt;/outputDirectory&gt;<br/>
- *		&lt;script&gt;outputFileName&lt;/script&gt;<br/>
+ *		&lt;report&gt;reportOutputFileName&lt;/report&gt;<br/>
+ *		&lt;script&gt;scriptOutputFileName&lt;/script&gt;<br/>
  *		&lt;preserveDatabaseIntegrity&gt;boolean&lt;/preserveDatabaseIntegrity&gt;<br/>
  *	&lt;/outputDetails&gt;<br/>
  *	<br/>
@@ -34,6 +35,9 @@ import org.dom4j.Node;
  * databaseliner runs or an absolute path depending on how it is declared.</p>
  * 
  * <p>For more information refer to @see LOBInsertionTool.</p>
+ * 
+ * <p>The <code>report</code> element defines the filename of the html report output file
+ * by databaseliner. This is a required field.</p>
  * 
  * <p>The <code>script</code> element defines the filename of the main data insertion script output
  * by databaseliner. This is a required field.</p>
@@ -76,8 +80,11 @@ public class ScriptOutputterConfigParser {
 		Node outputDirectoryNode = configDocument.selectSingleNode("//databaseliner/outputDetails/outputDirectory");
 		String outputDirectory = outputDirectoryNode.getText().trim();
 		
+		Node reportFilenameNode = configDocument.selectSingleNode("//databaseliner/outputDetails/report");
+		String reportOutputFilename = reportFilenameNode.getText().trim();
+		
 		Node scriptFilenameNode = configDocument.selectSingleNode("//databaseliner/outputDetails/script");
-		String outputFilename = scriptFilenameNode.getText().trim();
+		String scriptOutputFilename = scriptFilenameNode.getText().trim();
 		
 		Node preserveDatabaseIntegrityNode = configDocument.selectSingleNode("//databaseliner/outputDetails/preserveDatabaseIntegrity");
 		boolean preserveDatabaseIntegrity = true;
@@ -85,7 +92,7 @@ public class ScriptOutputterConfigParser {
 			preserveDatabaseIntegrity = Boolean.parseBoolean(preserveDatabaseIntegrityNode.getText().trim());
 		}
 		
-		return new ScriptOutputter(outputDirectory, outputFilename, preserveDatabaseIntegrity);
+		return new ScriptOutputter(outputDirectory, reportOutputFilename, scriptOutputFilename, preserveDatabaseIntegrity);
 	}
 
 }

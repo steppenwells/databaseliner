@@ -42,6 +42,11 @@ public class RefersToRelationship extends BaseRelationship {
 	public String toString() {
 		return String.format("data in [%s.%s] will populate [%s.%s]", seedTableName, seedColumnName, tableName, column);
 	}
+	
+	@Override
+	public String toHtmlString() {
+		return String.format("data in [%s.%s] will populate <a href=\"#%s\">[%s.%s]</a>", seedTableName, seedColumnName, tableName.getHtmlIdSafeName(), tableName, column);
+	}
 
 	@Override
 	protected List<String> getExtractionSqlStrings(List<Row> dirtyRows, Table dirtyTable, SqlStringOutputter sqlStringOutputter) {
