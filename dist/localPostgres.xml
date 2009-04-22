@@ -13,7 +13,7 @@
 		<preserveDatabaseIntegrity>false</preserveDatabaseIntegrity>
 	</outputDetails>
 	
-	<extractionPlan>
+	<extractionPlan dryRun="false">
 		
 		<extraction table="static_table" type="all" />
 		

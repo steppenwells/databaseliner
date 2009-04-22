@@ -24,15 +24,18 @@ public class ExtractionModel {
 	private final List<Relationship> relationships;
 	
 	private final Map<TableName, Table> tables;
+	private final boolean dryRunMode;
 	
 	private final static Logger LOG = Logger.getLogger(ExtractionModel.class);
 
-	public ExtractionModel(DatabaseConnector databaseConnector, List<SeedExtraction> seeds, List<String> ignoredTableNames, List<Relationship> relationships) {
+
+	public ExtractionModel(DatabaseConnector databaseConnector, List<SeedExtraction> seeds, List<String> ignoredTableNames, List<Relationship> relationships, boolean dryRunMode) {
 		this.databaseConnector = databaseConnector;
 		
 		this.seeds = seeds;
 		this.ignoredTableNames = ignoredTableNames;
 		this.relationships = relationships;
+		this.dryRunMode = dryRunMode;
 		
 		this.tables = new HashMap<TableName, Table>();
 	}
@@ -172,6 +175,11 @@ public class ExtractionModel {
 	}
 
 	public void extract() {
+		if (dryRunMode) {
+			LOG.debug("dryRun is set to true, not extracting data. Please review table and relationships output above.");
+			return;
+		}
+		
 		for (SeedExtraction seedExtraction : seeds) {
 			seedExtraction.extract(databaseConnector);
 		}

@@ -20,10 +20,20 @@ public class ExtractionPlanParser {
 		List<String> ignoredTableNames = parseIgnoredTables(configDocument);
 		List<Relationship> relationships = parseRelationships(configDocument);
 		
-		ExtractionModel extractionModel = new ExtractionModel(databaseConnector, seeds, ignoredTableNames, relationships);
+		boolean dryRunMode = parseDryRunModeSetting(configDocument);
+		
+		ExtractionModel extractionModel = new ExtractionModel(databaseConnector, seeds, ignoredTableNames, relationships, dryRunMode);
 		extractionModel.build();
 		
 		return extractionModel;
+	}
+
+	private static boolean parseDryRunModeSetting(Document configDocument) {
+		Node dryRunNode = configDocument.selectSingleNode("//databaseliner/extractionPlan/@dryRun");
+		if (dryRunNode != null) {
+			return Boolean.parseBoolean(dryRunNode.getText());
+		}
+		return false;
 	}
 
 	@SuppressWarnings("unchecked")
