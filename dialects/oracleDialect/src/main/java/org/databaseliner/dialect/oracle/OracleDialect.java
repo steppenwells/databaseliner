@@ -12,6 +12,7 @@ public class OracleDialect implements Dialect {
 		HashMap<String, SQLOutputter> postgresTypeOutputters = new HashMap<String, SQLOutputter>();
 		
 		postgresTypeOutputters.put("java.sql.Date", new OracleDateOutputter());
+		postgresTypeOutputters.put("oracle.sql.TIMESTAMP", new OracleTimestampOutputter());
 		postgresTypeOutputters.put("oracle.sql.CLOB", new OracleCLOBOutputter());
 		
 		return postgresTypeOutputters;
