@@ -3,7 +3,11 @@ package org.databaseliner.output;
 public class ToStringOutputter implements SQLOutputter {
 
 	public String asSqlString(Object fieldObject) {
-		return fieldObject == null ? "NULL" : fieldObject.toString();
+		return fieldObject == null ? "NULL" : removeNewLines(fieldObject.toString());
+	}
+
+	private String removeNewLines(String string) {
+		return string.replace('\n', ' ').replace('\r', ' ');
 	}
 
 	@Override

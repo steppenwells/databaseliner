@@ -12,7 +12,10 @@ public class QuoteAndEscapeOutputter implements SQLOutputter {
 	}
 	
 	private String escape(Object fieldObject) {
-		return fieldObject.toString().replaceAll("'", "''");
+		return fieldObject.toString()
+				.replaceAll("'", "''")
+				.replace('\n', ' ')
+				.replace('\r', ' ');
 	}
 	
 	@Override

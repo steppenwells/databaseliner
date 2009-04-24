@@ -10,7 +10,7 @@ import org.databaseliner.output.SQLOutputter;
 
 public class OracleTimestampOutputter implements SQLOutputter {
 
-	private SimpleDateFormat oracleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	private SimpleDateFormat oracleDateFormat = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss");
 	private String oracleDateSqlFormatString = "to_date('%s', 'DD-MON-YYYY HH24:MI:SS')";
 	
 	@Override

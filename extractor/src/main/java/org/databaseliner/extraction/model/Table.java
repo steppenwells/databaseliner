@@ -288,7 +288,7 @@ public class Table {
 				delimeter = ", ";
 			}
 		}
-		valuesBuilder.append(")");
+		valuesBuilder.append(");");
 		return valuesBuilder.toString();
 	}
 

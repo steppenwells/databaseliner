@@ -12,7 +12,7 @@ public class OracleDateOutputterTest {
 	
 	@SuppressWarnings("deprecation")
 	@Test public void shouldOutputDateInOracleFormat() throws Exception {
-		assertEquals("to_date('2009-01-24 00:00:00', 'DD-MON-YYYY HH24:MI:SS')", outputter.asSqlString(new Date(109, 0, 24)));
+		assertEquals("to_date('24-Jan-2009 00:00:00', 'DD-MON-YYYY HH24:MI:SS')", outputter.asSqlString(new Date(109, 0, 24)));
 	}
 	
 	@Test public void shouldOutputNullValueIfInputIsNull() throws Exception {
