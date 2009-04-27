@@ -4,6 +4,7 @@ package org.databaseliner.placeholderloader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -57,7 +58,7 @@ public class StringPlaceholderLoaderAntTask extends Task {
 					File dataFile = new File(ds.getBasedir(), files[i]);
 					processFile(dataFile);
 				}
-				log("updated " + files.length + "entries");
+				log("updated " + files.length + " entries");
 			}
 		} catch (Exception e) {
 			throw new BuildException(e);
@@ -68,9 +69,30 @@ public class StringPlaceholderLoaderAntTask extends Task {
 		String sql = buildUpdateSql(dataFile);
 		
 		PreparedStatement updateStatement = getConnection().prepareStatement(sql.toString());
-		updateStatement.setAsciiStream(1, new FileInputStream(dataFile), (int) dataFile.length());
-		updateStatement.executeUpdate();
-		updateStatement.close();
+		try {
+			updateStatement.setString(1, fileAsString(dataFile));
+			updateStatement.executeUpdate();
+		} catch (Exception e) {
+			System.err.println("error updating using sql: " + sql.toString());
+			e.printStackTrace();
+			throw e;
+		} finally {
+			updateStatement.close();
+		}
+	}
+
+	private String fileAsString(File dataFile) throws Exception {
+		StringBuilder stringBuilder = new StringBuilder();
+		InputStream inputStream = new FileInputStream(dataFile);
+		
+        byte[] buf = new byte[256];
+        int read = 0;
+        while ((read = inputStream.read(buf)) > 0) {
+            stringBuilder.append(new String(buf, 0, read));
+        }
+        
+        inputStream.close();
+        return stringBuilder.toString();
 	}
 
 	private String buildUpdateSql(File dataFile) throws IOException {
