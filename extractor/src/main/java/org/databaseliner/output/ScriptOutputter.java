@@ -83,11 +83,15 @@ public class ScriptOutputter {
 			scriptWriter = new FileWriter(outputFile);
 			SqlStringOutputter sqlStringOutputter = extractionModel.getSqlStringOutputter();
 			
+			scriptWriter.write(sqlStringOutputter.getScriptHeader());
+			
 			if (preserveDatabaseIntegrity) {
 				outputAllTablesPreservingDatabaseIntegrity(extractionModel, scriptWriter, sqlStringOutputter);
 			} else {
 				outputAllTablesAsInsertStatements(extractionModel, scriptWriter, sqlStringOutputter);
 			}
+			
+			scriptWriter.write(sqlStringOutputter.getScriptFooter());
 			
 		} catch (Exception e) {
 			throw new RuntimeException("failed to output script file", e);

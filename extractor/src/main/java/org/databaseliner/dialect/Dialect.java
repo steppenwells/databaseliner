@@ -43,5 +43,22 @@ public interface Dialect {
 	 * given class. Entries in this class override the default output mappings in databaseliner.
 	 */
 	Map<String, SQLOutputter> getTypeOutputMap();
+	
+	/**
+	 * 
+	 * <p>Gets a database specific header to use when outputting the SQL script. For example the oracle dialect 
+	 * includes a directive to turn of variable substitution when running in SQL plus</p>
+	 * 
+	 * @return the header to put at the start of the output SQL script
+	 */
+	String getScriptHeader();
+	
+	/**
+	 * 
+	 * <p>Gets a database specific footer to use when outputting the SQL script.</p>
+	 * 
+	 * @return the footer to put at the end of the output SQL script
+	 */
+	String getScriptFooter();
 
 }

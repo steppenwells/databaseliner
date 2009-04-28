@@ -11,10 +11,17 @@ public class SqlStringOutputter {
 	private static SqlStringOutputter outputter = null;
 	private Map<String, SQLOutputter> javaTypeMap = new HashMap<String, SQLOutputter>();
 	
+	private String scriptHeader = "";
+	private String scriptFooter = "";
+	
 	public SqlStringOutputter(DatabaseConnector connector) {
 		
 		createDefaultMappings();
-		createDialectSpecificMappings(connector.getDialect());
+		Dialect dialect = connector.getDialect();
+		createDialectSpecificMappings(dialect);
+		
+		scriptHeader = dialect.getScriptHeader();
+		scriptFooter = dialect.getScriptFooter();
 	}
 
 
@@ -73,5 +80,14 @@ public class SqlStringOutputter {
 			return outputterForObject;	
 		}
 		throw new RuntimeException("No outputter exists for java type " + fieldObject.getClass().getName());
+	}
+
+
+	public String getScriptHeader() {
+		return scriptHeader;
+	}
+
+	public String getScriptFooter() {
+		return scriptFooter;
 	}
 }

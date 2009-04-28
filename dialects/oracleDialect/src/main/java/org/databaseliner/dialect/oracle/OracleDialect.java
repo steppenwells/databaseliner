@@ -8,7 +8,7 @@ import org.databaseliner.output.SQLOutputter;
 
 public class OracleDialect implements Dialect {
 
-	public Map getTypeOutputMap() {
+	public Map<String, SQLOutputter> getTypeOutputMap() {
 		HashMap<String, SQLOutputter> postgresTypeOutputters = new HashMap<String, SQLOutputter>();
 		
 		postgresTypeOutputters.put("java.sql.Date", new OracleDateOutputter());
@@ -16,6 +16,16 @@ public class OracleDialect implements Dialect {
 		postgresTypeOutputters.put("oracle.sql.CLOB", new OracleCLOBOutputter());
 		
 		return postgresTypeOutputters;
+	}
+
+	@Override
+	public String getScriptFooter() {
+		return "";
+	}
+
+	@Override
+	public String getScriptHeader() {
+		return "set define off\n";
 	}
 
 }

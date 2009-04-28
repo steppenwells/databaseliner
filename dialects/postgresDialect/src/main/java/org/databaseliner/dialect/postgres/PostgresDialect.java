@@ -17,4 +17,14 @@ public class PostgresDialect implements Dialect {
 		return postgresTypeOutputters;
 	}
 
+	@Override
+	public String getScriptFooter() {
+		return "";
+	}
+
+	@Override
+	public String getScriptHeader() {
+		return "";
+	}
+
 }
