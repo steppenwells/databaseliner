@@ -88,7 +88,7 @@ public class StringPlaceholderLoaderAntTask extends Task {
         byte[] buf = new byte[256];
         int read = 0;
         while ((read = inputStream.read(buf)) > 0) {
-            stringBuilder.append(new String(buf, 0, read));
+            stringBuilder.append(new String(buf, 0, read, "UTF-8"));
         }
         
         inputStream.close();

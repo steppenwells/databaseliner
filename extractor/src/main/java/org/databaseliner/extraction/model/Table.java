@@ -1,6 +1,6 @@
 package org.databaseliner.extraction.model;
 
-import java.io.FileWriter;
+import java.io.Writer;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -242,11 +242,11 @@ public class Table {
 		
 	}
 
-	public void writeAsInsert(FileWriter scriptWriter, SqlStringOutputter sqlStringOutputter, String outputDirectory) {
+	public void writeAsInsert(Writer scriptWriter, SqlStringOutputter sqlStringOutputter, String outputDirectory) {
 		writeAsInsertWithNullColumns(new ArrayList<Column>(), scriptWriter, sqlStringOutputter, outputDirectory);
 	}
 	
-	public void writeAsInsertWithNullColumns(List<Column> columnsToMakeNull, FileWriter scriptWriter, SqlStringOutputter sqlStringOutputter, String outputDirectory) {
+	public void writeAsInsertWithNullColumns(List<Column> columnsToMakeNull, Writer scriptWriter, SqlStringOutputter sqlStringOutputter, String outputDirectory) {
 		try {
 			String insertHeader = buildInsertHeader(columnsToMakeNull);
 		
@@ -292,7 +292,7 @@ public class Table {
 		return valuesBuilder.toString();
 	}
 
-	public void writeNulledFieldsAsUpdate(FileWriter scriptWriter, SqlStringOutputter sqlStringOutputter, String outputDirectory) {
+	public void writeNulledFieldsAsUpdate(Writer scriptWriter, SqlStringOutputter sqlStringOutputter, String outputDirectory) {
 		
 		try {
 			scriptWriter.write("---UPDATES FOR " + tableName.getTableName() + " ---\n\n");

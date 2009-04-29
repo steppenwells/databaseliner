@@ -1,8 +1,11 @@
 package org.databaseliner.output;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -75,12 +78,12 @@ public class ScriptOutputter {
 	}
 	
 	private void outputDataScript(ExtractionModel extractionModel) {
-		FileWriter scriptWriter = null;
+		Writer scriptWriter = null;
 		try {
 			File outputFile = new File(outputDirectory, scriptOutputFilename);
 			outputFile.getParentFile().mkdirs();
 			outputFile.createNewFile();
-			scriptWriter = new FileWriter(outputFile);
+			scriptWriter = new OutputStreamWriter(new FileOutputStream(outputFile), "UTF-8");
 			SqlStringOutputter sqlStringOutputter = extractionModel.getSqlStringOutputter();
 			
 			scriptWriter.write(sqlStringOutputter.getScriptHeader());
@@ -106,7 +109,7 @@ public class ScriptOutputter {
 		}
 	}
 
-	private void outputAllTablesAsInsertStatements(ExtractionModel extractionModel, FileWriter scriptWriter, SqlStringOutputter sqlStringOutputter) {
+	private void outputAllTablesAsInsertStatements(ExtractionModel extractionModel, Writer scriptWriter, SqlStringOutputter sqlStringOutputter) {
 		List<Table> allTables = extractionModel.getAllTables();
 		
 		for (Table table : allTables) {
@@ -114,13 +117,13 @@ public class ScriptOutputter {
 		}
 	}
 
-	private void outputAllTablesPreservingDatabaseIntegrity(ExtractionModel extractionModel, FileWriter scriptWriter, SqlStringOutputter sqlStringOutputter) {
+	private void outputAllTablesPreservingDatabaseIntegrity(ExtractionModel extractionModel, Writer scriptWriter, SqlStringOutputter sqlStringOutputter) {
 		outputNonCyclicTables(extractionModel, scriptWriter, sqlStringOutputter);
 		outputTablesInCycles(extractionModel, scriptWriter, sqlStringOutputter);
 	}
 
 	// structurally recurses all tables to output simple non cyclic tables
-	private void outputNonCyclicTables(ExtractionModel extractionModel,	FileWriter scriptWriter, SqlStringOutputter sqlStringOutputter) {
+	private void outputNonCyclicTables(ExtractionModel extractionModel,	Writer scriptWriter, SqlStringOutputter sqlStringOutputter) {
 		
 		List<Table> allTables = extractionModel.getAllTables();
 		
@@ -131,7 +134,7 @@ public class ScriptOutputter {
 	}
 
 	public boolean outputTableAndDependencies(Table table, ArrayList<Table> dependentTables, ExtractionModel extractionModel,
-			FileWriter scriptWriter, SqlStringOutputter sqlStringOutputter) {
+			Writer scriptWriter, SqlStringOutputter sqlStringOutputter) {
 	
 		// table might have been output already if a previously output table depended on it.
 		if (table.isOutput()) {
@@ -168,7 +171,7 @@ public class ScriptOutputter {
 		
 	}
 	
-	private void outputTablesInCycles(ExtractionModel extractionModel, FileWriter scriptWriter, SqlStringOutputter sqlStringOutputter) {
+	private void outputTablesInCycles(ExtractionModel extractionModel, Writer scriptWriter, SqlStringOutputter sqlStringOutputter) {
 		List<Table> unoutputTables = extractionModel.getUnoutputTables();
 		while(!unoutputTables.isEmpty()) {
 			
@@ -187,7 +190,7 @@ public class ScriptOutputter {
 	}
 
 	
-	private void outputUpdatesForTablesWithNulledFields(ExtractionModel extractionModel, FileWriter scriptWriter, SqlStringOutputter sqlStringOutputter) {
+	private void outputUpdatesForTablesWithNulledFields(ExtractionModel extractionModel, Writer scriptWriter, SqlStringOutputter sqlStringOutputter) {
 		List<Table> allTables = extractionModel.getAllTables();
 		
 		for (Table table : allTables) {
@@ -196,7 +199,7 @@ public class ScriptOutputter {
 	}
 
 	private void outputUpdatesIfAllNulledDependenciesSatisfied(Table table,	ExtractionModel extractionModel, 
-			FileWriter scriptWriter, SqlStringOutputter sqlStringOutputter) {
+			Writer scriptWriter, SqlStringOutputter sqlStringOutputter) {
 		
 		if (table.isNeedsUpdate() && areAllNulledDependenciesSatisfied(table, extractionModel)) {
 			table.writeNulledFieldsAsUpdate(scriptWriter, sqlStringOutputter, outputDirectory);
