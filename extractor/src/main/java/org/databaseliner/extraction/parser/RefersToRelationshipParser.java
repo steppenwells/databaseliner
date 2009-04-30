@@ -12,7 +12,7 @@ import org.dom4j.Node;
  * 
  * <p>
  * <code>
- * 	&lt;relationship schema="schema_name" table="table_name" column="column" type="refersTo" seed_table="seed_table_name" seed_column="seed_column"/&gt;
+ * 	&lt;relationship schema="schema_name" table="table_name" column="column" type="refersTo" seedTable="seed_table_name" seedColumn="seed_column"/&gt;
  * </code>
  * </p>
  * 
@@ -26,10 +26,10 @@ import org.dom4j.Node;
  * <p>The <code>column</code> attribute specifies which column on the <code>table</code> contains the
  * values that are matched with values in the seed table. This is a required attribute</p> 
  * 
- * <p>The <code>seed_table</code> attribute specifies which table contains data which is related to the the table
+ * <p>The <code>seedTable</code> attribute specifies which table contains data which is related to the the table
  * which data is being extracted from.</p>
  * 
- * <p>The <code>seed_column</code> attribute specifies which column on the <code>seed_table</code> contains data that
+ * <p>The <code>seedColumn</code> attribute specifies which column on the <code>seed_table</code> contains data that
  * is used to extract data from the <code>table</code>.</p>
  */
 public class RefersToRelationshipParser implements RelationshipParser{

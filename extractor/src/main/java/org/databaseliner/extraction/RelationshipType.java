@@ -70,7 +70,31 @@ public enum RelationshipType {
 	 * 
 	 * @see ConditionalOnSeedTableParser
 	 */
-	conditionalOnSeedTable(new ConditionalOnSeedTableParser());
+	conditionalOnSeedTable(new ConditionalOnSeedTableParser()),
+	
+	/**
+	 * Defines a relationship between two tables that will be ignored by the data extraction.
+	 * 
+	 * <p>This can be used when a table is depended on by another table that would normally be extracted
+	 * automatically by the extraction run. It allows the individual relationship to be suppressed without
+	 * ignoring the entire table using an <code>ignore</code> definition on the table, this allows the
+	 * table to be populated using data in other areas of the schema.</p>
+	 * 
+	 * <p>This relationship is usually used in conjunction with the <code>removeColumn</code> or 
+	 * <code>updateField</code> manipulations to ensure that the ignored relationship is satisfied
+	 * in the output data set. This relationship is also useful if your overall data extraction is performed
+	 * by making a number of smaller extractions with different configurations.</p>
+	 * 
+	 * <p>An ignored relationship is defined by an relationship xml node with a <code>type</code>
+	 * attribute of <code>ignored</code>.</p>
+	 * 
+	 * <p><code>
+	 *   &lt;relationship type="ignored" ... /&gt;
+	 * </code></p>
+	 * 
+	 * @see IgnoredRelationshipParser
+	 */
+	ignoredRelationship(new IgnoredRelationshipParser());
 
 	private final RelationshipParser relationshipParser;
 	
