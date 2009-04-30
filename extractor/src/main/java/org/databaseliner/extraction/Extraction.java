@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.databaseliner.database.DatabaseConnector;
 import org.databaseliner.extraction.model.ExtractionModel;
+import org.databaseliner.extraction.model.TableName;
 import org.dom4j.Document;
 import org.dom4j.Node;
 
@@ -17,7 +18,7 @@ public class Extraction {
 		
 		
 		List<SeedExtraction> seeds = parseSeedExtractions(configDocument);
-		List<String> ignoredTableNames = parseIgnoredTables(configDocument);
+		List<TableName> ignoredTableNames = parseIgnoredTables(configDocument);
 		List<Relationship> relationships = parseRelationships(configDocument);
 		
 		extractionModel = new ExtractionModel(databaseConnector, seeds, ignoredTableNames, relationships, false);
@@ -38,13 +39,18 @@ public class Extraction {
 	}
 	
 	@SuppressWarnings("unchecked")
-	private List<String> parseIgnoredTables(Document configDocument) {
+	private List<TableName> parseIgnoredTables(Document configDocument) {
 		
-		List<String> ignoredTableNames = new ArrayList<String>();
+		List<TableName> ignoredTableNames = new ArrayList<TableName>();
 		
 		List<Node> selectNodes = configDocument.selectNodes("//databaseliner/extractionPlan/ignore");
 		for (Node node : selectNodes) {
-			ignoredTableNames.add(node.selectSingleNode("@table").getText().trim());
+			
+			Node schemaNode = node.selectSingleNode("@seedSchema");
+			String schemaName = schemaNode != null ? schemaNode.getText().trim() : null;
+			
+			String tableName = node.selectSingleNode("@table").getText().trim();
+			ignoredTableNames.add(new TableName(tableName, schemaName));
 		}
 		return ignoredTableNames;
 	}

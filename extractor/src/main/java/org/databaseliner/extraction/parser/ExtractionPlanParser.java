@@ -9,6 +9,7 @@ import org.databaseliner.extraction.Relationship;
 import org.databaseliner.extraction.RelationshipType;
 import org.databaseliner.extraction.SeedExtraction;
 import org.databaseliner.extraction.model.ExtractionModel;
+import org.databaseliner.extraction.model.TableName;
 import org.dom4j.Document;
 import org.dom4j.Node;
 
@@ -17,7 +18,7 @@ public class ExtractionPlanParser {
 	public static ExtractionModel parse(Document configDocument, DatabaseConnector databaseConnector) {
 		
 		List<SeedExtraction> seeds = parseSeedExtractions(configDocument);
-		List<String> ignoredTableNames = parseIgnoredTables(configDocument);
+		List<TableName> ignoredTableNames = parseIgnoredTables(configDocument);
 		List<Relationship> relationships = parseRelationships(configDocument);
 		
 		boolean dryRunMode = parseDryRunModeSetting(configDocument);
@@ -50,13 +51,18 @@ public class ExtractionPlanParser {
 	}
 	
 	@SuppressWarnings("unchecked")
-	private static List<String> parseIgnoredTables(Document configDocument) {
+	private static List<TableName> parseIgnoredTables(Document configDocument) {
 		
-		List<String> ignoredTableNames = new ArrayList<String>();
+		List<TableName> ignoredTableNames = new ArrayList<TableName>();
 		
 		List<Node> selectNodes = configDocument.selectNodes("//databaseliner/extractionPlan/ignore");
 		for (Node node : selectNodes) {
-			ignoredTableNames.add(node.selectSingleNode("@table").getText().trim());
+			
+			Node schemaNode = node.selectSingleNode("@seedSchema");
+			String schemaName = schemaNode != null ? schemaNode.getText().trim() : null;
+			
+			String tableName = node.selectSingleNode("@table").getText().trim();
+			ignoredTableNames.add(new TableName(tableName, schemaName));
 		}
 		return ignoredTableNames;
 	}

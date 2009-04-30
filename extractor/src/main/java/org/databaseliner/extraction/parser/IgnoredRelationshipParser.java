@@ -2,7 +2,6 @@ package org.databaseliner.extraction.parser;
 
 import org.apache.log4j.Logger;
 import org.databaseliner.extraction.IgnoredRelationship;
-import org.databaseliner.extraction.RefersToRelationship;
 import org.databaseliner.extraction.Relationship;
 import org.dom4j.Node;
 

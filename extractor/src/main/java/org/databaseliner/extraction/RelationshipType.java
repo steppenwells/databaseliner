@@ -2,6 +2,7 @@ package org.databaseliner.extraction;
 
 import org.databaseliner.extraction.parser.CompositeReferingToMultipleTablesParser;
 import org.databaseliner.extraction.parser.ConditionalOnSeedTableParser;
+import org.databaseliner.extraction.parser.IgnoredRelationshipParser;
 import org.databaseliner.extraction.parser.RefersToRelationshipParser;
 import org.databaseliner.extraction.parser.RelationshipParser;
 import org.dom4j.Node;
@@ -94,7 +95,7 @@ public enum RelationshipType {
 	 * 
 	 * @see IgnoredRelationshipParser
 	 */
-	ignoredRelationship(new IgnoredRelationshipParser());
+	ignored(new IgnoredRelationshipParser());
 
 	private final RelationshipParser relationshipParser;
 	

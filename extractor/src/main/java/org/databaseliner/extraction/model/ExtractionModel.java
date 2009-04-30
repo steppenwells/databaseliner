@@ -11,6 +11,7 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 import org.databaseliner.database.DatabaseConnector;
 import org.databaseliner.database.DatabaseUtils;
+import org.databaseliner.extraction.IgnoredRelationship;
 import org.databaseliner.extraction.Relationship;
 import org.databaseliner.extraction.SeedExtraction;
 import org.databaseliner.output.SqlStringOutputter;
@@ -20,7 +21,7 @@ public class ExtractionModel {
 	private final DatabaseConnector databaseConnector;
 	
 	private final List<SeedExtraction> seeds;
-	private final List<String> ignoredTableNames;
+	private final List<TableName> ignoredTableNames;
 	private final List<Relationship> relationships;
 	
 	private final Map<TableName, Table> tables;
@@ -29,7 +30,7 @@ public class ExtractionModel {
 	private final static Logger LOG = Logger.getLogger(ExtractionModel.class);
 
 
-	public ExtractionModel(DatabaseConnector databaseConnector, List<SeedExtraction> seeds, List<String> ignoredTableNames, List<Relationship> relationships, boolean dryRunMode) {
+	public ExtractionModel(DatabaseConnector databaseConnector, List<SeedExtraction> seeds, List<TableName> ignoredTableNames, List<Relationship> relationships, boolean dryRunMode) {
 		this.databaseConnector = databaseConnector;
 		
 		this.seeds = seeds;
@@ -61,6 +62,7 @@ public class ExtractionModel {
 		DatabaseMetaData databaseMetaData = databaseConnector.getDatabaseMetaData();
 		populateTableColumnData(databaseMetaData, table);
 		markPrimaryKeyColumns(databaseMetaData, table);
+		
 		addReferencedTablesAndRelationships(databaseMetaData, table);
 		addUserDefinedRelationshipsForTable(table);
 		
@@ -126,7 +128,8 @@ public class ExtractionModel {
 				
 				TableName dependedOnTableLocator = new TableName(dependedOnTableName, dependedOnSchemaName);
 				table.addOutputDependency(dependedOnTableLocator, localTableColumnName);
-				if (ignoredTableNames.contains(dependedOnTableName)) {
+				
+				if (isIgnoredTableOrRelationship(table.getName(), localTableColumnName, dependedOnTableLocator, dependedOnTableColumn)) {
 					LOG.debug("found reference to ignored table, skipping");
 					continue;
 				}
@@ -144,6 +147,25 @@ public class ExtractionModel {
 		} finally {
 			DatabaseUtils.close(fkColumnSet);
 		}
+	}
+
+	private boolean isIgnoredTableOrRelationship(TableName fromTableName, String fromColumn, TableName toTableName, String toColumn) {
+		if (ignoredTableNames.contains(toTableName)) {
+			LOG.debug("found reference to ignored table, skipping");
+			return true;
+		}
+		
+		for (Relationship relationship : relationships) {
+			if (relationship instanceof IgnoredRelationship) {
+				IgnoredRelationship ignoredRelationship = (IgnoredRelationship) relationship;
+				
+				if (ignoredRelationship.shouldIgnoreRelationship(fromTableName, fromColumn, toTableName, toColumn)) {
+					LOG.debug("found reference to ignored relationship, skipping");
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 	
 	private void addUserDefinedRelationshipsForTable(Table table) {

@@ -15,7 +15,7 @@ public class CompositeReferingToMultipleTablesRelationship extends BaseRelations
 	
 	public CompositeReferingToMultipleTablesRelationship(String schemaName, String tableName) {
 		
-		super(new TableName(schemaName, tableName));
+		super(new TableName(tableName, schemaName));
 		tableRelationships = new ArrayList<TableRelationship>();
 	}
 
@@ -49,6 +49,10 @@ public class CompositeReferingToMultipleTablesRelationship extends BaseRelations
 	protected List<String> getExtractionSqlStrings(List<Row> dirtyRows, Table dirtyTable, SqlStringOutputter sqlStringOutputter) {
 		List<String> sqlStatements = new ArrayList<String>();
 		
+		if (dirtyRows.size() == 0) {
+			return new ArrayList<String>();
+		}
+		
 		List<List<Row>> dirtyChunks = splitListIntoChunksSafeForWhereClauses(dirtyRows);
 		
 		sqlStatements.add(createSqlTempate());
@@ -58,7 +62,13 @@ public class CompositeReferingToMultipleTablesRelationship extends BaseRelations
 			if (relatedTable.getSeedTable().equals(dirtyTable)) {
 				rowchunks = dirtyChunks;
 			} else {
-				rowchunks = splitListIntoChunksSafeForWhereClauses(relatedTable.getSeedTable().getRows());
+				
+				List<Row> relatedRows = relatedTable.getSeedTable().getRows();
+				if (relatedRows.size() == 0) {
+					return new ArrayList<String>();
+				}
+				
+				rowchunks = splitListIntoChunksSafeForWhereClauses(relatedRows);
 			}
 			
 			sqlStatements = expandTemplateFor(rowchunks, relatedTable, sqlStatements, sqlStringOutputter);
@@ -104,12 +114,12 @@ public class CompositeReferingToMultipleTablesRelationship extends BaseRelations
 		builder.append("data in the following tables: ");
 		for (TableRelationship tableRelationship : tableRelationships) {
 			TableName seedTableName = tableRelationship.seedTable.getName();
-			builder.append(String.format("<a href=\"%s\">%s.%s</a> ", 
+			builder.append(String.format("<a href=\"#%s\">%s.%s</a> ", 
 					seedTableName.getHtmlIdSafeName(), 
 					seedTableName.toString(), 
 					tableRelationship.getSeedColumn().getName()));
 		}
-		builder.append(String.format("polulates data in <a href=\"%s\">%s.%s</a>", tableName.getHtmlIdSafeName(), tableName));
+		builder.append(String.format("polulates data in <a href=\"#%s\">%s</a>", tableName.getHtmlIdSafeName(), tableName));
 		return builder.toString();
 	}
 	
