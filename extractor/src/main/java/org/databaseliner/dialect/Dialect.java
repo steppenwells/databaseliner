@@ -18,7 +18,7 @@ import org.databaseliner.output.SQLOutputter;
  * The dialect pom is the only place that is allowed to explicitly import any database specific
  * jdbc dependencies, the core of databaseliner must remain rdbms agnostic.</li>
  * <li>Create an implementation of Dialect that exposes database specific behaviour.</li>
- * <li>Configure databaseliner to use you dialect implementation in your configuration file</li>
+ * <li>Configure databaseliner to use your dialect implementation in your configuration file</li>
  * <li>If all works well submit a patch</li>
  * </ul>
  *
@@ -47,7 +47,7 @@ public interface Dialect {
 	/**
 	 * 
 	 * <p>Gets a database specific header to use when outputting the SQL script. For example the oracle dialect 
-	 * includes a directive to turn of variable substitution when running in SQL plus</p>
+	 * includes a directive to turn off variable substitution when running in SQL plus</p>
 	 * 
 	 * @return the header to put at the start of the output SQL script
 	 */
