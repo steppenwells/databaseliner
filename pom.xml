@@ -13,7 +13,7 @@
     <modules>
         <module>extractor</module>
         <module>placeholderLoader</module>
-        <!-- <module>dialects</module> -->
+        <module>dialects</module>
     </modules>
 
     <scm>

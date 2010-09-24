@@ -4,9 +4,16 @@
   <groupId>org.databaseliner</groupId>
   <artifactId>dialect.oracle</artifactId>
   <packaging>jar</packaging>
-  <version>0.9-SNAPSHOT</version>
-  <name>oracleDialect</name>
-  <url>http://maven.apache.org</url>
+  
+  <name>databaseliner :: dialects :: oracleDialect</name>
+  
+  <description>Databaseliner oracle dialect</description>
+  
+  <parent>
+    <groupId>org.databaseliner</groupId>
+    <artifactId>databaseliner-dialects-parent</artifactId>
+    <version>0.9-SNAPSHOT</version>
+  </parent>
   
   <build>
   	<plugins>
@@ -34,13 +41,12 @@
       <scope>test</scope>
     </dependency>
     <!-- This was playing up horribly in eclipse so in the end I downloaded and included
-    	the ojdbc14 jar as an external jar to get the project to compile and run.
+    	the ojdbc14 jar as an external jar to get the project to compile and run.-->
     <dependency>
-    	<groupId>com.oracle</groupId>
-    	<artifactId>ojdbc14</artifactId>
-    	<version>10.0.2.0.0 </version>
+    	<groupId>oracle.sql</groupId>
+    	<artifactId>ojdbc14.jar</artifactId>
+    	<version>10.2</version>
     	<scope>compile</scope>
     </dependency>
-    -->
   </dependencies>
 </project>
