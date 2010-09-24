@@ -74,7 +74,7 @@ public class ConditionalOnSeedTableRelationship extends RefersToRelationship {
 
 		public boolean rowMatchesCondition(Row row) {
 			Object columnValue = row.getColumnValue(whenColumnName);
-			return valueToEqual.equals(columnValue.toString());
+			return columnValue != null && valueToEqual.equals(columnValue.toString());
 		}
 		
 		@Override
