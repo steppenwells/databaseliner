@@ -1,10 +1,9 @@
 package org.databaseliner.dialect.oracle.fieldProcessors;
 
-import java.io.InputStream;
-
 import oracle.sql.CLOB;
-
 import org.databaseliner.manipulation.FieldProcessor;
+
+import java.io.Reader;
 
 public class ShortCLOBToStringProcessor implements FieldProcessor {
 
@@ -30,11 +29,11 @@ public class ShortCLOBToStringProcessor implements FieldProcessor {
 
 	private String getClobAsString(CLOB clob) throws Exception {
 		StringBuilder stringBuilder = new StringBuilder();
-		InputStream inputStream = clob.getAsciiStream();
+		Reader reader = clob.getCharacterStream();
 		
-        byte[] buf = new byte[256];
+        char[] buf = new char[256];
         int read = 0;
-        while ((read = inputStream.read(buf)) > 0) {
+        while ((read = reader.read(buf)) > 0) {
             stringBuilder.append(new String(buf, 0, read));
         }
         
