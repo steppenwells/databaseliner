@@ -147,11 +147,18 @@ followed. This allows you to configure another relationship to extract the data 
 relationship.
 * refersTo - Relationship from a single table to another table. This acts like the default foreign key
 extraction that gets data from a table that is referred to by the seed table except that no foreign need
-exist in the database.
-
-This can be used to model the inverse of an existing foreign key, extracting all the data in a table that
-refers to the seed table, or where no foreign key relationship is defined (for example where audit data
+exist in the database. This can be used to model the inverse of an existing foreign key, extracting all
+the data in a table that refers to the seed table, or where no foreign key relationship is defined (for example where audit data
 about an object outlives the object itself so no foreign key can be defined).
+* compositeReferingToMultipleTables - Relationship where the data in the target table is defined by 2 or
+more tables. This allows data to be restricted so that it is only extracted when it refers to data both
+in the defined tables. By using this relationship you can manage the join tables between different areas
+of your database extraction without them blowing up and pulling in undesired data. For example in an
+audit system that logs different events against objects this extraction can retrieve all audit records for
+extracted objects with the extracted audit types. Without using this relationship type extracting data for
+the join could retrieve every audit of the desired type and cause every object in the system to be
+extracted. This could then in turn pull in every audit type in the system resulting in the entire
+database being extracted.
 
 More readme to come soon
 ========================
