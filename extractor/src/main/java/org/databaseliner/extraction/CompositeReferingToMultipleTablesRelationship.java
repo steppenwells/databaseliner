@@ -3,10 +3,7 @@ package org.databaseliner.extraction;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.databaseliner.extraction.model.Column;
-import org.databaseliner.extraction.model.Row;
-import org.databaseliner.extraction.model.Table;
-import org.databaseliner.extraction.model.TableName;
+import org.databaseliner.extraction.model.*;
 import org.databaseliner.output.SqlStringOutputter;
 
 public class CompositeReferingToMultipleTablesRelationship extends BaseRelationship {
@@ -162,6 +159,9 @@ public class CompositeReferingToMultipleTablesRelationship extends BaseRelations
 		}
 
         public void verify() {
+            if (seedTable == null) {
+                throw new ExtractionModel.TableMissingException("attept to reference non existant table " + seedTableName);
+            }
             seedTable.getColumnWithName(seedColumn); // throws if missing
         }
 	}

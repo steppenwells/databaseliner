@@ -90,7 +90,7 @@ public class ExtractionModel {
 	        }
 
             if (!tableExists) {
-                throw new RuntimeException("Unable to get column data for " + table);
+                throw new TableMissingException("Unable to get column data for " + table);
             }
 	        
 		} catch (SQLException e) {
@@ -277,4 +277,12 @@ public class ExtractionModel {
 		return SqlStringOutputter.instance(databaseConnector);
 	}
 
+    public static class TableMissingException extends RuntimeException {
+
+        private static final long serialVersionUID = 1L;
+
+        public TableMissingException(String message) {
+            super(message);
+        }
+    }
 }
