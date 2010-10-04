@@ -40,6 +40,7 @@ public class RefersToRelationship extends BaseRelationship {
         if (seedTable == null) {
             throw new ExtractionModel.TableMissingException("attept to reference non existant table " + seedTableName);
         }
+        tableToFill.getColumnWithName(column);
         seedTable.getColumnWithName(seedColumnName); // throws if missing
     }
 

@@ -162,6 +162,7 @@ public class CompositeReferingToMultipleTablesRelationship extends BaseRelations
             if (seedTable == null) {
                 throw new ExtractionModel.TableMissingException("attept to reference non existant table " + seedTableName);
             }
+            tableToFill.getColumnWithName(column);
             seedTable.getColumnWithName(seedColumn); // throws if missing
         }
 	}
