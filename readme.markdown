@@ -159,6 +159,41 @@ extracted objects with the extracted audit types. Without using this relationshi
 the join could retrieve every audit of the desired type and cause every object in the system to be
 extracted. This could then in turn pull in every audit type in the system resulting in the entire
 database being extracted.
+* conditionalOnSeedTable - Relates a single table to another table but only populates data when the data
+in seed table matches the provided condition. This is used when a table is used to provide a layer of
+indirection to another table or tables. By adding conditionalOnSeedTable relationships with conditions you
+can define how to follow the indirection and extract desired data.
+
+
+manipulations
+-------------
+
+The manipulations section of the databaseliner configuration allows you to specify any changes to the
+extracted data prior to outputting the sql file. Manipulations are useful when the target database schema
+does not match the source schema, when you need to change the values in certain columns or streamline the
+output sql.
+
+The available manipulation types are:
+
+* renameTable - This manipulation is used when a table in the target schema has a different name to table
+extracted from. This situation arises when data is extracted from more than one schema and inserted into
+a single consolidated schema. In this case the tables in different schemas can have the same name and the
+table in one schema be referenced by a synonym. Using this manipulation the table can be renamed to have
+the same name as the synonym and be used transparently in the target schema.
+* removeColumn - This is used if the column is not present in the target schema or if you want to leave
+it blank (or let the database default the values for you)
+* addColumn - This is used if you need to add a new column to a table, this can occur if the target
+schema is different from the source schema (this can occur if work development work has been done on the
+target schema which has not been applied to the source schema yet)
+* renameColumn - This is used if you need to add a new column to a table, this can occur if the target
+schema is different from the source schema (this can occur if work development work has been done on the
+target schema which has not been applied to the source schema yet)
+* updateField - This is used when data in the source schema is not appropriate for use in the target schema.
+For example you might be extracting from a live database with real user's data in it, the update field
+manipulator can be used to change their passwords to a known value in the target schema (so you can log in
+as them) and to obfuscate their credit card details.
+Fields can be set to explicitly defined values, values from other columns on the table, arbitrary sql
+statements or output of a given FieldManipulator class.
 
 More readme to come soon
 ========================
