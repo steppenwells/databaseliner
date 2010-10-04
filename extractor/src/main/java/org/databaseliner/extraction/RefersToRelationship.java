@@ -38,6 +38,11 @@ public class RefersToRelationship extends BaseRelationship {
 		return seedTable.getColumnWithName(seedColumnName);
 	}
 
+    @Override
+    public void verify() {
+        seedTable.getColumnWithName(seedColumnName); // throws if missing
+    }
+
 	@Override
 	public String toString() {
 		return String.format("data in [%s.%s] will populate [%s.%s]", seedTableName, seedColumnName, tableName, column);
@@ -47,6 +52,7 @@ public class RefersToRelationship extends BaseRelationship {
 	public String toHtmlString() {
 		return String.format("data in [%s.%s] will populate <a href=\"#%s\">[%s.%s]</a>", seedTableName, seedColumnName, tableName.getHtmlIdSafeName(), tableName, column);
 	}
+
 
 	@Override
 	protected List<String> getExtractionSqlStrings(List<Row> dirtyRows, Table dirtyTable, SqlStringOutputter sqlStringOutputter) {

@@ -47,6 +47,11 @@ public class ExtractionModel {
 			Table seededTable = addTable(seedExtraction.getTableName());
 			seedExtraction.setTableToFill(seededTable);
 		}
+
+        // all relationships should now be correctly bound in the model
+        for (Relationship relationship : relationships) {
+            relationship.verify();                
+        }
 	}
 
 	private Table addTable(TableName tableName) {
@@ -75,11 +80,18 @@ public class ExtractionModel {
 		ResultSet columnSet = null;
 		try {
 			columnSet = databaseMetaData.getColumns(null, table.getName().getSchemaName(), table.getName().getTableName(), null);
-	
+
+            boolean tableExists = false;
+
 	        while (columnSet.next()) {
+                tableExists = true;
 	            int nullability = columnSet.getInt("NULLABLE");
 	            table.addColumn(new Column(columnSet.getString("COLUMN_NAME"), (nullability == DatabaseMetaData.columnNullable)));
 	        }
+
+            if (!tableExists) {
+                throw new RuntimeException("Unable to get column data for " + table);
+            }
 	        
 		} catch (SQLException e) {
 			
@@ -177,6 +189,7 @@ public class ExtractionModel {
 		}
 		
 		for (Relationship relationship : userRelationshipsForTable) {
+
 			TableName tableNameToFill = relationship.getTableName();
 			if (tableNameToFill.getSchemaName() == null) {
 				tableNameToFill.setSchemaName(table.getName().getSchemaName());

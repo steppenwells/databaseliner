@@ -107,6 +107,13 @@ public class CompositeReferingToMultipleTablesRelationship extends BaseRelations
 		}
 		return sqlStatementTemplate.toString();
 	}
+
+    @Override
+    public void verify() {
+        for(TableRelationship relationship : tableRelationships) {
+            relationship.verify();
+        }
+    }
 	
 	@Override
 	public String toHtmlString() {
@@ -153,6 +160,10 @@ public class CompositeReferingToMultipleTablesRelationship extends BaseRelations
 		public String getSeedIdentifier() {
 			return seedTableName + "." + seedColumn;
 		}
+
+        public void verify() {
+            seedTable.getColumnWithName(seedColumn); // throws if missing
+        }
 	}
 
 }
