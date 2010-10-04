@@ -51,9 +51,8 @@ public class Extractor {
         	System.err.println("usage: Extractor [config_filename]");
         } else {
         	extractor = new Extractor(args[0]);
+            extractor.extract();
+            System.exit(extractor.extractionModel.failed() ? 1 : 0);
         }
-        extractor.extract();
 	}
-
-
 }

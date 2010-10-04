@@ -29,6 +29,8 @@ public class ExtractionModel {
 	
 	private final static Logger LOG = Logger.getLogger(ExtractionModel.class);
 
+    private boolean failed = false;
+
 
 	public ExtractionModel(DatabaseConnector databaseConnector, List<SeedExtraction> seeds, List<TableName> ignoredTableNames, List<Relationship> relationships, boolean dryRunMode) {
 		this.databaseConnector = databaseConnector;
@@ -50,11 +52,15 @@ public class ExtractionModel {
 
         // all relationships should now be correctly bound in the model
         for (Relationship relationship : relationships) {
-            relationship.verify();                
+            try {
+                relationship.verify();                
+            } catch (RuntimeException e) {
+                failWith(e);
+            }
         }
 	}
 
-	private Table addTable(TableName tableName) {
+    private Table addTable(TableName tableName) {
 		
 		if (tables.get(tableName) != null) {
 			LOG.debug("Table " + tableName + " already in model returning");
@@ -90,7 +96,7 @@ public class ExtractionModel {
 	        }
 
             if (!tableExists) {
-                throw new TableMissingException("Unable to get column data for " + table);
+                failWith(new TableMissingException("unable to get column data for " + table));
             }
 	        
 		} catch (SQLException e) {
@@ -276,6 +282,18 @@ public class ExtractionModel {
 	public SqlStringOutputter getSqlStringOutputter() {
 		return SqlStringOutputter.instance(databaseConnector);
 	}
+
+    private void failWith(RuntimeException e) {
+        failed = true;
+        LOG.error(e.getMessage());
+        if (!dryRunMode) {
+            throw e;
+        }
+    }
+
+    public boolean failed() {
+        return failed;
+    }
 
     public static class TableMissingException extends RuntimeException {
 
