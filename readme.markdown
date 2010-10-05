@@ -195,6 +195,29 @@ as them) and to obfuscate their credit card details.
 Fields can be set to explicitly defined values, values from other columns on the table, arbitrary sql
 statements or output of a given FieldManipulator class.
 
+
+CLOBs
+=====
+
+Since CLOBs can't be inserted by a standard insert script databaseliner handles them slightly differently.
+Rather than put the text value of the CLOB in the insert statement the text is written out to the output
+directory. The text files are placed in a directory structure that represents the table and column that
+the CLOB is from and the filename reflects the primary key representing the CLOB's row. The insert script
+sets the value of the CLOB to "placeholder".
+
+To load the correct values for the CLOBs there is an ant task (placeholderLoader) that scans the output directory structure and
+streams the values from the files into the correct rows in the database.
+
+As writing CLOBS to disk and then streaming them into the target database is not the most efficient way of
+doing business there is a manipulation available in the oracle dialect (and potentially in future dialects)
+that can check the size of the text stored in the CLOB and if it is short enough to be inserted as a
+conventional string then it will output the string insert rather than write the CLOB out to disk. This can
+improve performance when a CLOB field is used to provide unlimitted text capacity but most values are
+reasonably small.
+
+Note all CLOBs are written out as utf-8 encoded files so that they include all accents and exotic characters
+you have in your database.
+
 More readme to come soon
 ========================
 
