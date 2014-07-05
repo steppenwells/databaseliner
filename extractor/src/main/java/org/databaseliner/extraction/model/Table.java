@@ -352,6 +352,5 @@ public class Table {
 		public ColumnMissingException(String message) {
 			super(message);
 		}
-
 	}
 }
