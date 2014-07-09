@@ -29,6 +29,8 @@ public class ExtractionModel {
 	
 	private final static Logger LOG = Logger.getLogger(ExtractionModel.class);
 
+    private boolean failed = false;
+
 
 	public ExtractionModel(DatabaseConnector databaseConnector, List<SeedExtraction> seeds, List<TableName> ignoredTableNames, List<Relationship> relationships, boolean dryRunMode) {
 		this.databaseConnector = databaseConnector;
@@ -47,9 +49,18 @@ public class ExtractionModel {
 			Table seededTable = addTable(seedExtraction.getTableName());
 			seedExtraction.setTableToFill(seededTable);
 		}
+
+        // all relationships should now be correctly bound in the model
+        for (Relationship relationship : relationships) {
+            try {
+                relationship.verify();                
+            } catch (RuntimeException e) {
+                failWith(e);
+            }
+        }
 	}
 
-	private Table addTable(TableName tableName) {
+    private Table addTable(TableName tableName) {
 		
 		if (tables.get(tableName) != null) {
 			LOG.debug("Table " + tableName + " already in model returning");
@@ -75,11 +86,18 @@ public class ExtractionModel {
 		ResultSet columnSet = null;
 		try {
 			columnSet = databaseMetaData.getColumns(null, table.getName().getSchemaName(), table.getName().getTableName(), null);
-	
+
+            boolean tableExists = false;
+
 	        while (columnSet.next()) {
+                tableExists = true;
 	            int nullability = columnSet.getInt("NULLABLE");
 	            table.addColumn(new Column(columnSet.getString("COLUMN_NAME"), (nullability == DatabaseMetaData.columnNullable)));
 	        }
+
+            if (!tableExists) {
+                failWith(new TableMissingException("unable to get column data for " + table));
+            }
 	        
 		} catch (SQLException e) {
 			
@@ -177,6 +195,7 @@ public class ExtractionModel {
 		}
 		
 		for (Relationship relationship : userRelationshipsForTable) {
+
 			TableName tableNameToFill = relationship.getTableName();
 			if (tableNameToFill.getSchemaName() == null) {
 				tableNameToFill.setSchemaName(table.getName().getSchemaName());
@@ -264,4 +283,24 @@ public class ExtractionModel {
 		return SqlStringOutputter.instance(databaseConnector);
 	}
 
+    private void failWith(RuntimeException e) {
+        failed = true;
+        LOG.error(e.getMessage());
+        if (!dryRunMode) {
+            throw e;
+        }
+    }
+
+    public boolean failed() {
+        return failed;
+    }
+
+    public static class TableMissingException extends RuntimeException {
+
+        private static final long serialVersionUID = 1L;
+
+        public TableMissingException(String message) {
+            super(message);
+        }
+    }
 }
