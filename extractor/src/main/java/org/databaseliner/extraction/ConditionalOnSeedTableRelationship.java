@@ -55,8 +55,14 @@ public class ConditionalOnSeedTableRelationship extends RefersToRelationship {
 	public void addCondition(String whenColumnName, String valueToEqual) {
 		this.condition = new Condition(whenColumnName, valueToEqual);
 	}
-	
-	@Override
+
+    @Override
+    public void verify() {
+        super.verify();
+        seedTable.getColumnWithName(condition.whenColumnName); // throws if missing
+    }
+
+    @Override
 	public String toHtmlString() {
 		
 		return super.toHtmlString() + " " + condition;

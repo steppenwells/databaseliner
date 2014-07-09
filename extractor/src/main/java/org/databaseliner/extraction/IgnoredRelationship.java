@@ -45,7 +45,12 @@ public class IgnoredRelationship extends BaseRelationship {
 		return false; 
 	}
 
-	@Override
+    @Override
+    public void verify() {
+        // nothing can go wrong here
+    }
+
+    @Override
 	public String toHtmlString() {
 		return String.format("relationship between [%s.%s] and  <a href=\"#%s\">[%s.%s]</a> is ignored", seedTableName, seedColumn, toTableName.getHtmlIdSafeName(), toTableName, toColumn);
 	}
