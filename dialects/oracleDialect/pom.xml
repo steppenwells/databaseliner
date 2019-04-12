@@ -42,11 +42,10 @@
     </dependency>
     <!-- This was playing up horribly in eclipse so in the end I downloaded and included
     	the ojdbc14 jar as an external jar to get the project to compile and run.-->
-    <dependency>
-    	<groupId>oracle.sql</groupId>
-    	<artifactId>ojdbc14.jar</artifactId>
-    	<version>10.2</version>
-    	<scope>compile</scope>
-    </dependency>
+      <dependency>
+          <groupId>com.oracle</groupId>
+          <artifactId>ojdbc7</artifactId>
+          <version>12.1.0.2</version>
+      </dependency>
   </dependencies>
 </project>
