@@ -39,6 +39,7 @@ public class SqlStringOutputter {
 		javaTypeMap.put("java.lang.String", quoteAndEscapeOutputter);
 		
 		javaTypeMap.put("java.lang.Boolean", new BooleanAsBitOutputter());
+		javaTypeMap.put("[B", new RawToHexOutputter());
 	}
 	
 	private void createDialectSpecificMappings(Dialect dialect) {
